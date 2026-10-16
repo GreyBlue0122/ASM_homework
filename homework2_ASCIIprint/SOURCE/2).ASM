@@ -1,0 +1,41 @@
+.model small
+.stack 100h
+.code
+START:
+	MOV BL,'a'
+	MOV CX,2
+OUTER_LOOP:
+	PUSH CX
+	MOV CX,13
+INNER_LOOP:
+	MOV DL,BL
+	MOV AH,02H
+	INT 21H
+	
+	MOV DL,' '
+	MOV AH,02H
+	INT 21H
+	
+	INC BL
+	
+	DEC CX
+	CMP CX,0
+	JNE INNER_LOOP
+	
+	MOV DL,0DH
+	MOV AH,02H
+	INT 21H
+	
+	MOV DL,0AH
+	MOV AH,02H
+	INT 21H
+	
+	POP CX
+	
+	DEC CX
+	CMP CX,0
+	JNE OUTER_LOOP
+	
+	mov AX,4C00H
+    int 21H
+END START
