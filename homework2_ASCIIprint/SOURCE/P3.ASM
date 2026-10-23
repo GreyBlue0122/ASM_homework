@@ -6,7 +6,7 @@
 ?debug	macro
 	endm
 	endif
-	?debug	S "..\source\3).c"
+	?debug	S "..\source\p3.c"
 ;	将代码段，数据段组合成组，以便于寻址
 _TEXT	segment	byte public 'CODE'
 DGROUP	group	_DATA,_BSS
@@ -68,11 +68,14 @@ _main	proc	near
 	
 ;	将缓冲区内容写到屏幕
 @11:
+;	将待打印的内容的字符串首地址地址压入栈中
 	mov	ax,offset DGROUP:__streams+16
 	push	ax
+;	缓冲区内的字符压栈
 	push	word ptr [bp-1]
 ;	系统调用：__fputc
 	call	near ptr __fputc
+;	弹出printf的栈中的参数（两个）
 	pop	cx
 	pop	cx
 @10:
@@ -89,13 +92,17 @@ _main	proc	near
 	jmp	short @12
 ;	将缓冲区内容写到屏幕
 @13:
+;	将待打印的内容的字符串首地址地址压入栈中
 	mov	ax,offset DGROUP:__streams+16
 	push	ax
+;	移动空格并压栈
 	mov	al,32
 	push	ax
+;	系统调用：__fputc	
 	call	near ptr __fputc
 	pop	cx
 	pop	cx
+
 ;	ch++
 @12:
 	inc	byte ptr [bp-1]
